@@ -1,10 +1,14 @@
 Peer Assignment 1
 ================================================================================
-Loading and preprocessing the data
+### Loading and preprocessing the data ###
 
 
 ```r
-data <- read.csv("activity.csv")
+temp <- tempfile()
+download.file("http://d396qusza40orc.cloudfront.net/repdata/data/activity.zip", 
+    temp)
+data <- read.csv(unz(temp, "activity.csv"))
+unlink(temp)
 
 # Removing NA's from the dataset and storing it in data1
 data1 <- data[!is.na(data$steps), ]
@@ -17,7 +21,7 @@ sum_vector <- c()
 ```
 
 
-What is mean total number of steps taken per day?
+### What is mean total number of steps taken per day? ###
 
 ```r
 # Iterating through all the variables in the list obtained from the above
@@ -32,7 +36,7 @@ sum_vector_without_NA <- sum_vector[!is.na(sum_vector)]
 
 # Histogram of the total number of steps taken each day
 hist(sum_vector_without_NA, main = "Histogram of total number of steps taken each day", 
-    xlab = "total number of steps taken each day")
+    xlab = "total number of steps taken each day", col = rainbow(7))
 ```
 
 ![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
@@ -46,9 +50,9 @@ hist(sum_vector_without_NA, main = "Histogram of total number of steps taken eac
 
 The mean of the total number of steps taken per day is 1.0766 &times; 10<sup>4</sup>
  and the corresponding median is 1.0765 &times; 10<sup>4</sup>
-```
 
-What is the average daily activity pattern?
+
+### What is the average daily activity pattern? ###
 
 
 ```r
@@ -99,7 +103,7 @@ p <- ts(p)
 # (x-axis) and the average number of steps taken, averaged across all days
 # (y-axis)
 plot(p, mean_col, main = "5-minute interval (x-axis) vs the average number of steps taken", 
-    xlab = "5-minute interval", ylab = "average number of steps taken")
+    xlab = "5-minute interval", ylab = "average number of steps taken", type = "l")
 ```
 
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
@@ -110,10 +114,11 @@ plot(p, mean_col, main = "5-minute interval (x-axis) vs the average number of st
 # containing the maximum number of steps
 ```
 
-The 5-minute interval, on average across all the days in the dataset, containing the maximum number of step is 104
+
+The 5-minute interval, on average across all the days in the dataset, containing the maximum number of step is 835
 
 
-Imputing missing values
+### Imputing missing values ###
 
 
 ```r
@@ -129,7 +134,7 @@ for (i in seq_along(a)) {
 ```
 
 
-total number of missing values in the dataset (i.e. the total number of rows with NAs) is 2304
+Total number of missing values in the dataset (i.e. the total number of rows with NAs) is 2304
 
 
 
@@ -161,15 +166,16 @@ for (i in seq_along(dataSplit_new)) {
     vector_new <- c(vector_new, mean(dataSplit_new[[i]]$steps) * length(dataSplit_new[[i]]$steps))
 }
 hist(vector_new, main = "Histogram of total number of steps taken each day", 
-    xlab = "total number of steps taken each day")
+    xlab = "total number of steps taken each day", col = rainbow(7))
 ```
 
 ![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
 
+
 NEW mean and median total number of steps taken per day are 1.0766 &times; 10<sup>4</sup> and 1.0766 &times; 10<sup>4</sup> respectively
 
 
-Are there differences in activity patterns between weekdays and weekends?
+### Are there differences in activity patterns between weekdays and weekends? ###
 
 
 ```r
@@ -228,12 +234,15 @@ p <- ts(p)
 # (x-axis) and the average number of steps taken, averaged across all days
 # (y-axis)
 par(mfrow = c(2, 1))
-plot(p, mean_col1, main = "weekday", xlab = "5-minute interval", ylab = "average number of steps taken")
-plot(p, mean_col2, main = "weekend", xlab = "5-minute interval", ylab = "average number of steps taken")
+plot(p, mean_col2, main = "weekend", xlab = "5-minute interval", ylab = "average number of steps taken", 
+    type = "l")
+plot(p, mean_col1, main = "weekday", xlab = "5-minute interval", ylab = "average number of steps taken", 
+    type = "l")
 ```
 
 ![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6.png) 
 
 
+### The activity pattern during weekday seems to take peak during certain intervals while the activity pattern during weekend appears to be fairly consistent ###
 
 
